@@ -1,193 +1,209 @@
 # Calculo-Actuarial-2
 Martínez Ortiz Angelo Osmar
-calculo-actuarial-ii-unidad-1/
-|
-|-- 0_Proposito_y_resultados/
-|   |-- Tres lenguajes en paralelo: modelo matemático,
-|   |   implementación (Python/Git) y datos
-|   `-- 8 resultados: Ω/evento/v.a., Bayes, momentos,
-|       distribuciones, Python, GitHub, reproducibilidad,
-|       leer estadística oficial sin confundir conteo/tasa/q_x
-|
-|-- 1_Problema_actuarial/
-|   |-- Obligación = evento incierto + monto + momento de pago
-|   |-- Valor actuarial = E[valor presente aleatorio]
-|   |-- X = B·I, E[X] = B·q
-|   |   (ej.: B=500 000, q=0.004 -> E[X]=$2 000)
-|   `-- E[X] no es prima comercial (gastos, margen de
-|       riesgo, capital, reaseguro, etc.)
-|
-|-- 2_Entorno_reproducible/
-|   |-- Trazabilidad: fuente -> transformación -> modelo
-|   |   -> resultado -> reporte
-|   |-- Herramientas: GitHub (2FA), Git, Python 3, VS Code
-|   |   + extensiones Python y Jupyter (sin Anaconda)
-|   |-- Git: user.name, user.email, defaultBranch main
-|   |-- Repo: calculo-actuarial-ii-apellido-nombre,
-|   |   clonar con git clone, abrir con code .
-|   |-- Entorno virtual .venv + requirements.txt
-|   |   (pip freeze) + seleccionar intérprete en VS Code
-|   |-- Estructura: data/{raw,processed}, notebooks/,
-|   |   src/, tests/, figures/, reports/,
-|   |   .github/workflows/tests.yml
-|   |-- Regla de oro: el dato crudo nunca se edita
-|   |-- .gitignore: .venv, __pycache__, .env, datos grandes
-|   |-- Nunca subir: contraseñas, tokens, llaves, datos
-|   |   personales, bases con licencia restrictiva
-|   |-- Ciclo Git: status, add, commit, pull, push
-|   |   (commits coherentes: feat:, data:, test:, notes:)
-|   |-- README: problema, datos, versión de Python,
-|   |   instalación, ejecución, resultados, hipótesis
-|   `-- pytest (bernoulli_expected_cost) + GitHub Actions
-|       (python 3.12, pytest -q en cada push)
-|
-|-- 3_Python_minimo/
-|   |-- Variables, funciones (separan modelo de presentación)
-|   |-- NumPy: vectorizar q * benefit
-|   |-- Pandas: DataFrame de cartera, columna expected_cost
-|   |-- Matplotlib: la gráfica como diagnóstico
-|   |-- SciPy: binom.pmf, binom.cdf
-|   `-- Semilla (default_rng(31415)): reproduce, no
-|       "aleatoriza más"
-|
-|-- 4_Lenguaje_de_probabilidad/
-|   |-- Espacio muestral Ω y eventos (A = {N ≥ 3})
-|   |-- σ-álgebra: Ω ∈ F, complemento, uniones numerables
-|   |-- Espacio (Ω, F, P): P(Ω)=1, P ≥ 0, σ-aditividad
-|   |-- P(A^c)=1-P(A), P(A∪B)=P(A)+P(B)-P(A∩B)
-|   |   (ej.: 0.08+0.05-0.015 = 0.115)
-|   |-- Condicional: P(A|B)=P(A∩B)/P(B); tpx = P(T_x > t)
-|   |-- Prob. total: segmentos 60/40 con 0.02 y 0.06
-|   |   -> P(C)=0.036
-|   |-- Bayes: P(B|C)=2/3 (B es 40% de la cartera pero
-|   |   2/3 de las reclamaciones; no implica causalidad)
-|   `-- Independencia: supuesto, no consecuencia;
-|       disjuntos con P>0 NO son independientes;
-|       falla con epidemias, catástrofes, inflación médica
-|
-|-- 5_Variables_aleatorias/
-|   |-- X: Ω -> R medible (regla fija, resultado incierto)
-|   |-- Discretas: masa p_X(x); continuas: densidad f_X,
-|   |   P(X=x)=0 en continuas
-|   |-- CDF: no decreciente, continua por la derecha,
-|   |   f = F'
-|   `-- Indicadores: E[1_A]=P(A); N = ΣI_j,
-|       E[N]=ΣP(I_j=1) sin requerir independencia
-|
-|-- 6_Esperanza_varianza_dependencia/
-|   |-- Esperanza discreta/continua y LOTUS E[g(X)]
-|   |-- Linealidad (no requiere independencia)
-|   |-- Var(X) = E[X²] - E[X]²; Var(aX+b) = a²Var(X)
-|   |-- Cov(X,Y) = E[XY] - E[X]E[Y]
-|   |-- Var(X+Y) = Var X + Var Y + 2Cov
-|   |   (dependencia común infla el riesgo agregado)
-|   `-- Ley iterada: E[X]=E[E[X|Y]]
-|       Var(X)=E[Var(X|Y)]+Var(E[X|Y])
-|       (dentro de grupos + entre grupos)
-|
-|-- 7_Cuantiles_y_transformaciones/
-|   |-- Cuantil q_α = inf{x : F(x) ≥ α} (la media no
-|   |   describe la cola)
-|   |-- Deducible: (X-d)+ ; E[(X-d)+] = ∫_d^∞ P(X>x)dx
-|   `-- Límite: min{X, u}; con deducible y límite, definir
-|       primero la función de pago y luego programar
-|
-|-- 8_Distribuciones_discretas/
-|   |-- Bernoulli: E=p, Var=p(1-p)
-|   |-- Binomial: E=np, Var=np(1-p)
-|   |   (ej.: n=50, q=0.04 -> E=2, Var=1.92, P(N=2)≈0.2762)
-|   |   Con p_j distintos: Poisson-binomial
-|   |-- Poisson: E=Var=λ, límite de binomial (n grande,
-|   |   p pequeño); si Var >> media: sobredispersión
-|   |   -> binomial negativa o mezcla
-|   `-- Geométrica: E=1/p, Var=(1-p)/p², sin memoria
-|
-|-- 9_Distribuciones_continuas/
-|   |-- Uniforme: E=(a+b)/2, Var=(b-a)²/12;
-|   |   transformación inversa X=F⁻¹(U)
-|   |-- Exponencial: S(t)=e^(-λt), E=1/λ, Var=1/λ²,
-|   |   sin memoria, μ(t)=λ (muy restrictiva para mortalidad)
-|   |-- Gamma: E=αθ, Var=αθ²; α=1 da la exponencial
-|   `-- Normal: simétrica, admite negativos, mala para
-|       severidades de cola pesada; útil en sumas (TCL)
-|
-|-- 10_Riesgo_agregado/
-|   |-- S = X1+...+Xn: E[S]=ΣE[Xj];
-|   |   con independencia Var(S)=ΣVar(Xj)
-|   |-- iid: E[S]=nμ, Var=nσ², CV = (1/√n)(σ/μ)
-|   |   (diversificación bajo independencia)
-|   `-- Modelo colectivo S = Σ_{j=1}^N Xj
-|       E[S]=μE[N]; Var(S)=E[N]σ² + Var(N)μ²
-|       Poisson(λ): E[S]=λμ, Var(S)=λ(σ²+μ²)
-|
-|-- 11_Grandes_numeros_y_simulacion/
-|   |-- LGN: promedio -> μ; frecuencia empírica fluctúa,
-|   |   converge sin ser monótona (Bernoulli p=0.08)
-|   `-- Una cartera grande no elimina riesgo sistemático
-|
-|-- 12_Datos_de_Mexico_INEGI/
-|   |-- EDR 2024: 819 672 casos, 74 variables (DEFUN24),
-|   |   4 930 fuentes informantes, tasa 630 por 100 mil
-|   |-- Serie 2015-2024: 655 688 (2015) -> 747 784 (2019)
-|   |   -> 1 086 743 (2020) -> pico 1 122 249 (2021,
-|   |   tasa 879) -> 847 716 (2022) -> 799 869 (2023)
-|   |   -> 819 672 (2024)
-|   |-- Conteo ≠ tasa bruta (630/100 000 = 0.0063)
-|   |   ≠ probabilidad q_x (condicionada a edad)
-|   |-- Ej.: 10 000 exposiciones -> 63, solo benchmark
-|   |   agregado, no tarifa
-|   |-- Ocurrencia vs. residencia: CDMX 863 por 100 mil
-|   |   (más alta) vs. Quintana Roo 490; sesgo de selección
-|   `-- Leer el diccionario antes del CSV (EDAD mezcla
-|       minutos, horas, días, meses y años); flujo:
-|       raw -> script -> processed -> comparar totales
-|       con cifras oficiales
-|
-|-- 13_Ejemplos_resueltos/
-|   |-- 1: al menos 1 reclamación en 5 años, p=0.03:
-|   |   1-0.97^5 ≈ 0.1413
-|   |-- 2: Binomial(100, 0.02), P(N=3)
-|   |-- 3: Poisson(4.5), P(N>7) = 1 - cdf(7)
-|   |-- 4: Exp(0.25), P(T>3)=e^(-0.75) ≈ 0.4724, E[T]=4
-|   |-- 5: deducible exponencial: E[(X-d)+]=e^(-λd)/λ
-|   |   ≈ $6 065.31 (λ=1/10 000, d=5 000)
-|   `-- 6: Compound Poisson(120), media 8 000, SD 12 000:
-|       E[S]=960 000, Var=24 960 000 000, SD≈157 987
-|
-|-- 14_Errores_a_evitar/
-|   `-- 1 densidad ≠ probabilidad  2 tasa ≠ q_x
-|       3 independencia por comodidad  4 Poisson por ser conteo
-|       5 esperanza ≠ predicción  6 redondear pronto
-|       7 editar datos crudos  8 subir datos sensibles
-|       9 guardar solo el notebook  10 "Python dio este número"
-|
-|-- 15_Practica_guiada/
-|   |-- A: repositorio (2FA, .venv, requirements, estructura,
-|   |   4+ commits, pytest -q, Actions en verde)
-|   |-- B: notebook 01_probabilidad_actuarial.ipynb (Bernoulli,
-|   |   binomial, Poisson, exponencial, LGN, datos,
-|   |   "Conclusiones actuariales"; gráficas con título,
-|   |   ejes e interpretación)
-|   |-- C: DataFrame EDR 2015-2024, 2 gráficas, cambio
-|   |   porcentual 2023-24, máximo de la serie, por qué
-|   |   630 no es q_x, citar fuente
-|   `-- D: entrega reproducible (clonar, entorno limpio,
-|       pip install -r, ejecutar todo en orden)
-|
-|-- 16_Ejercicios/
-|   `-- 31 ejercicios: A fundamentos (1-7), B momentos (8-12),
-|       C distribuciones (13-18), D agregados (19-22),
-|       E México (23-27), F GitHub (28-31)
-|
-|-- 17_Lista_de_verificacion/
-|   `-- Ω/evento/v.a., condicional, Bayes, independencia,
-|       momentos, distribuciones, semilla, Git, .venv,
-|       fuente oficial, tasa bruta ≠ q_x, explicar antes
-|       de mostrar código
-|
-`-- Anexos/
-    |-- Notación esencial: Ω, F, P, X, F_X, f_X, p_X, E, Var,
-    |   Cov, 1_A, N, S, q_α, (x)+
-    `-- Referencias: INEGI (EDR 2024, DEFUN24), GitHub Docs,
-        VS Code, Python venv, Pro Git, Dickson-Hardy-Waters,
-        Klugman-Panjer-Willmot
+# Resumen: Cálculo Actuarial II - Unidad I
+
+**Preliminares probabilísticos y entorno computacional reproducible**
+
+---
+
+## 1. Propósito y Enfoque del Curso
+
+- El cálculo actuarial modela obligaciones inciertas combinando **modelo matemático**, **implementación en código (Python)** y **datos reales**.
+- El flujo de trabajo busca la **reproducibilidad**: cada cálculo debe poder entenderse, ejecutarse y verificarse a partir de código, datos e hipótesis.
+- **Resultados de aprendizaje:** distinguir resultado, evento y variable aleatoria; usar condicional, Bayes e independencia; calcular momentos y cuantiles; reconocer las distribuciones básicas; simular con Python; mantener un repositorio en GitHub; leer una estadística oficial sin confundir conteo, tasa bruta y probabilidad individual.
+
+---
+
+## 2. El Problema Actuarial
+
+- **Obligación** = evento incierto + monto + momento de pago.
+- **Valor actuarial** = $E[\text{valor presente aleatorio}]$.
+- Costo aleatorio: $X = B \cdot I$, con $E[X] = B \cdot q$.
+- **Ejemplo:** $B = 500\,000$ y $q = 0.004$ dan $E[X] = \$2\,000$ por póliza.
+- El valor esperado **no es una prima comercial**: faltan gastos, margen de riesgo, capital, reaseguro, etc.
+
+---
+
+## 3. Entorno Computacional y Git
+
+- **Herramientas base:** Python 3, Git, GitHub (con autenticación de dos factores) y Visual Studio Code con las extensiones Python y Jupyter.
+- **Trazabilidad:** fuente de datos → transformación → modelo → resultado → reporte.
+- **Entorno virtual:** `.venv` y `requirements.txt` (generado con `pip freeze`); seleccionar el intérprete de `.venv` en VS Code.
+- **Estructura del repositorio:** `data/` (con `raw/` y `processed/`), `notebooks/`, `src/`, `tests/`, `figures/`, `reports/` y `.github/workflows/`.
+- **Ciclo diario de Git:** `git status`, `git add`, `git commit`, `git pull` y `git push`, con commits coherentes (`feat:`, `data:`, `test:`, `notes:`).
+- **Buenas prácticas:**
+  - Los datos crudos de `raw/` **jamás se editan manualmente**.
+  - Nunca subir contraseñas, tokens, llaves ni datos personales o sensibles.
+  - Ignorar con `.gitignore`: `.venv/`, `__pycache__/`, `.env` y datos grandes.
+- **Automatización:** pruebas con `pytest` y **GitHub Actions** (Python 3.12) que corren en cada push.
+- **README:** debe explicar el problema, los datos, la versión de Python, la instalación, la ejecución, los resultados y las hipótesis.
+
+---
+
+## 4. Python Mínimo para Modelar Riesgo
+
+- **NumPy:** cálculo vectorizado (`q * benefit`).
+- **Pandas:** tablas de datos, por ejemplo una cartera con columna `expected_cost`.
+- **Matplotlib:** la gráfica como herramienta de diagnóstico.
+- **SciPy:** distribuciones (`binom.pmf`, `binom.cdf`, `poisson.cdf`).
+- **Semillas:** `default_rng(31415)` permite reproducir la simulación; no la hace "más aleatoria".
+
+---
+
+## 5. Lenguaje de Probabilidad
+
+- **Espacio de probabilidad:** terna $(\Omega, \mathcal{F}, \mathbb{P})$, con $\mathbb{P}(\Omega) = 1$, $\mathbb{P} \ge 0$ y $\sigma$-aditividad.
+- **$\sigma$-álgebra:** contiene a $\Omega$, al complemento y a las uniones numerables.
+- **Operaciones:** $\mathbb{P}(A^c) = 1 - \mathbb{P}(A)$ y $\mathbb{P}(A \cup B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A \cap B)$ (ej.: $0.08 + 0.05 - 0.015 = 0.115$).
+- **Probabilidad condicional:** $\mathbb{P}(A \mid B) = \mathbb{P}(A \cap B) / \mathbb{P}(B)$. Condicionar cambia el universo de referencia.
+- **Probabilidad total:** segmentos 60 % / 40 % con frecuencias 0.02 y 0.06 dan $\mathbb{P}(C) = 0.036$.
+- **Teorema de Bayes:** $\mathbb{P}(B \mid C) = 2/3$. El segmento B es 40 % de la cartera pero origina dos terceras partes de las reclamaciones. Informativo no significa causal.
+- **Independencia:** $\mathbb{P}(A \cap B) = \mathbb{P}(A)\mathbb{P}(B)$. Es un **supuesto**, no una consecuencia. Eventos disjuntos con probabilidad positiva **no** son independientes. Falla ante epidemias, catástrofes o inflación médica.
+
+---
+
+## 6. Variables Aleatorias
+
+- Una variable aleatoria es una función medible $X: \Omega \to \mathbb{R}$ (la regla es fija; lo incierto es el resultado).
+- **Discretas:** función de masa $p_X(x)$. **Continuas:** densidad $f_X$, y $\mathbb{P}(X = x) = 0$.
+- **CDF:** $F_X(x) = \mathbb{P}(X \le x)$; no decreciente, continua por la derecha, y $f = F'$.
+- **Indicadores:** $E[\mathbf{1}_A] = \mathbb{P}(A)$. Si $N = \sum I_j$, entonces $E[N] = \sum \mathbb{P}(I_j = 1)$ sin requerir independencia.
+
+---
+
+## 7. Esperanza, Varianza y Dependencia
+
+- **Esperanza:** definida para discretas y continuas; **LOTUS** para $E[g(X)]$.
+- **Linealidad:** $E[aX + b] = aE[X] + b$ y la esperanza de una suma es la suma de esperanzas, **sin requerir independencia**.
+- **Varianza:** $\text{Var}(X) = E[X^2] - E[X]^2$ y $\text{Var}(aX + b) = a^2\,\text{Var}(X)$.
+- **Covarianza:** $\text{Cov}(X,Y) = E[XY] - E[X]E[Y]$, y $\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y) + 2\,\text{Cov}(X,Y)$. La dependencia común infla el riesgo agregado.
+- **Ley iterada:** $E[X] = E[E[X \mid Y]]$ y $\text{Var}(X) = E[\text{Var}(X \mid Y)] + \text{Var}(E[X \mid Y])$ (variabilidad dentro de grupos + entre grupos).
+
+---
+
+## 8. Cuantiles y Transformaciones de Pérdidas
+
+- **Cuantil:** $q_\alpha = \inf\{x : F_X(x) \ge \alpha\}$. La media no describe la cola.
+- **Deducible:** pago $(X - d)_+$, con $E[(X-d)_+] = \int_d^\infty \mathbb{P}(X > x)\,dx$.
+- **Límite:** pago $\min\{X, u\}$. Con deducible y límite, primero se define la función de pago y después se programa.
+
+---
+
+## 9. Distribuciones Discretas
+
+| Distribución | Esperanza | Varianza | Notas |
+|---|---|---|---|
+| Bernoulli($p$) | $p$ | $p(1-p)$ | Ocurre / no ocurre |
+| Binomial($n,p$) | $np$ | $np(1-p)$ | Suma de Bernoulli independientes |
+| Poisson($\lambda$) | $\lambda$ | $\lambda$ | Revisar sobredispersión |
+| Geométrica($p$) | $1/p$ | $(1-p)/p^2$ | Sin memoria |
+
+- **Ejemplo binomial:** $n = 50$, $q = 0.04$ da $E = 2$, $\text{Var} = 1.92$ y $\mathbb{P}(N=2) \approx 0.2762$.
+- Con probabilidades distintas $p_j$ aparece la **Poisson-binomial**.
+- **Poisson:** límite de la binomial ($n$ grande, $p$ pequeño). Si $\text{Var} \gg E$ hay sobredispersión y conviene una binomial negativa o una mezcla.
+
+---
+
+## 10. Distribuciones Continuas
+
+| Distribución | Esperanza | Varianza | Notas |
+|---|---|---|---|
+| Uniforme($a,b$) | $(a+b)/2$ | $(b-a)^2/12$ | Base de la simulación ($X = F^{-1}(U)$) |
+| Exponencial($\lambda$) | $1/\lambda$ | $1/\lambda^2$ | Sin memoria, $\mu(t) = \lambda$ |
+| Gamma($\alpha,\theta$) | $\alpha\theta$ | $\alpha\theta^2$ | Severidades sesgadas; $\alpha=1$ da la exponencial |
+| Normal($\mu,\sigma^2$) | $\mu$ | $\sigma^2$ | Admite negativos; útil en sumas (TCL) |
+
+- La exponencial es demasiado restrictiva para mortalidad humana en muchas edades.
+- La normal no siempre sirve para costos individuales positivos con cola pesada.
+- **No elegir una distribución por costumbre:** revisar soporte, cola, media-varianza, mecanismo generador y ajuste.
+
+---
+
+## 11. Riesgo Agregado
+
+- **Suma de pérdidas:** $S = X_1 + \dots + X_n$ con $E[S] = \sum E[X_j]$; con independencia, $\text{Var}(S) = \sum \text{Var}(X_j)$.
+- **Caso iid:** $E[S] = n\mu$, $\text{Var}(S) = n\sigma^2$ y coeficiente de variación $\frac{1}{\sqrt{n}}\frac{\sigma}{\mu}$ (diversificación bajo independencia).
+- **Modelo colectivo:** $S = \sum_{j=1}^{N} X_j$, con $E[S] = \mu E[N]$ y $\text{Var}(S) = E[N]\sigma^2 + \text{Var}(N)\mu^2$.
+- **Compound Poisson:** $E[S] = \lambda\mu$ y $\text{Var}(S) = \lambda(\sigma^2 + \mu^2)$.
+
+---
+
+## 12. Ley de los Grandes Números y Simulación
+
+- El promedio muestral converge a $\mu$; la frecuencia empírica fluctúa y converge sin ser monótona (simulación Bernoulli con $p = 0.08$).
+- Una cartera grande **no elimina el riesgo sistemático** (choques comunes).
+
+---
+
+## 13. Datos de México: INEGI (EDR)
+
+- **EDR 2024:** 819 672 defunciones registradas, 74 variables (archivo DEFUN24), 4 930 fuentes informantes y tasa bruta nacional de **630 por 100 mil**.
+
+| Año | Defunciones registradas | Tasa por 100 mil |
+|---|---|---|
+| 2015 | 655 688 | 536 |
+| 2016 | 685 766 | 555 |
+| 2017 | 703 047 | 563 |
+| 2018 | 722 611 | 574 |
+| 2019 | 747 784 | 588 |
+| 2020 | 1 086 743 | 860 |
+| 2021 | 1 122 249 | 879 |
+| 2022 | 847 716 | 659 |
+| 2023 | 799 869 | 619 |
+| 2024 | 819 672 | 630 |
+
+- **Conteo ≠ tasa bruta ≠ probabilidad $q_x$:** 630 por 100 mil equivale a 0.0063, pero agrega edades y sexos; $q_x$ está condicionada a la edad.
+- **Ejemplo:** 10 000 exposiciones con esa tasa dan 63, solo un benchmark agregado, no una tarifa.
+- **Ocurrencia vs. residencia:** CDMX tuvo la tasa más alta (863) y Quintana Roo la menor (490) por entidad de ocurrencia; es un caso de sesgo de selección.
+- **Leer el diccionario antes del CSV:** `EDAD` mezcla minutos, horas, días, meses y años. Flujo: `raw` → script → `processed` → comparar con cifras oficiales.
+
+---
+
+## 14. Ejemplos Resueltos
+
+- **Al menos una reclamación en 5 años** ($p = 0.03$): $1 - 0.97^5 \approx 0.1413$.
+- **Binomial(100, 0.02):** $\mathbb{P}(N = 3)$ con `stats.binom.pmf`.
+- **Poisson(4.5):** $\mathbb{P}(N > 7) = 1 - \text{cdf}(7)$.
+- **Exponencial(0.25):** $\mathbb{P}(T > 3) = e^{-0.75} \approx 0.4724$ y $E[T] = 4$.
+- **Deducible exponencial:** $E[(X-d)_+] = e^{-\lambda d}/\lambda \approx \$6\,065.31$ (con $\lambda = 1/10\,000$ y $d = 5\,000$).
+- **Compound Poisson(120)** con media 8 000 y SD 12 000: $E[S] = 960\,000$, $\text{Var}(S) = 24\,960\,000\,000$ y $SD \approx 157\,987$.
+
+---
+
+## 15. Errores Conceptuales a Evitar
+
+1. Confundir densidad con probabilidad.
+2. Confundir una tasa agregada con $q_x$.
+3. Usar independencia por comodidad.
+4. Elegir Poisson solo porque la variable es un conteo.
+5. Interpretar la esperanza como una predicción.
+6. Redondear demasiado pronto.
+7. Editar datos crudos.
+8. Subir información sensible a GitHub.
+9. Guardar solamente el notebook.
+10. Concluir "Python dio este número" sin explicación matemática.
+
+---
+
+## 16. Práctica Guiada
+
+- **Parte A (repositorio):** cuenta con 2FA, `.venv`, `requirements.txt`, estructura de carpetas, al menos 4 commits, `pytest -q` sin errores y Actions en verde.
+- **Parte B (notebook):** `01_probabilidad_actuarial.ipynb` con Bernoulli, binomial, Poisson, exponencial, grandes números, lectura de datos y sección final "Conclusiones actuariales".
+- **Parte C (datos de México):** DataFrame EDR 2015-2024, dos gráficas, cambio porcentual 2023-2024, máximo de la serie, explicar por qué 630 no es $q_x$ y citar la fuente.
+- **Parte D (entrega reproducible):** otra persona debe poder clonar, crear un entorno limpio, instalar dependencias y ejecutar todo en orden.
+
+---
+
+## 17. Ejercicios y Lista de Verificación
+
+- **31 ejercicios:** A fundamentos (1-7), B momentos (8-12), C distribuciones (13-18), D agregados (19-22), E México (23-27), F GitHub (28-31).
+- **Lista de verificación:** distinguir $\Omega$, evento y variable aleatoria; usar condicional y Bayes; saber cuándo la independencia es un supuesto; calcular momentos; simular con semilla; manejar Git y `.venv`; documentar fuentes; no confundir tasa bruta con $q_x$.
+
+---
+
+## Referencias
+
+- INEGI: Estadísticas de Defunciones Registradas (EDR) 2024 y archivo DEFUN24.
+- GitHub Docs, VS Code, Python (entornos virtuales) y Pro Git.
+- Dickson, Hardy y Waters: *Actuarial Mathematics for Life Contingent Risks*.
+- Klugman, Panjer y Willmot: *Loss Models: From Data to Decisions*.
